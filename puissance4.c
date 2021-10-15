@@ -1,17 +1,17 @@
 #include <stdio.h>
 
-int nbL = 6;
-int nbC = 7;
-extern char plateau[nbL][nbC];
+#define NBL 6
+#define NBC 7
+char plateau[NBL+3][NBC];
 
 void init(){
-    for (int L=0; L<nbL; L++){
-        for (int C=0; C<nbC; C++){
+    for (int L=0; L<NBL; L++){
+        for (int C=0; C<NBC; C++){
             plateau[L][C] = '.';
-            printf("%c ", plateau[L][C]);
         }
-    } 
+    }
 }
+
 
 int main(void){
     init();
