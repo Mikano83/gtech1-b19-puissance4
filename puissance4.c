@@ -51,19 +51,32 @@ void print_plateau()
     printf("\n\n");
 }
 
-void update_plateau(int colonne, int player)
+int update_plateau(int colonne, int player)
 {
+    int checkFullPlateau = 0;
+
     for (int l = NBL; l >= 0; l--)
     {
+        if (plateau[0][colonne] != '.')
+        {
+            return 1;
+        }
         if (plateau[l][colonne] == '.')
         {
             plateau[l][colonne] = token[player];
             lineChanged = l;
-            break;
+            for (int i = 0; i < NBC; i++)
+            {
+                if (plateau[0][i] != '.')
+                    checkFullPlateau++;
+            }
+            if (checkFullPlateau == NBC)
+                return 2;
+            system("cls");
+            print_plateau();
+            return 0;
         }
     }
-    system("cls");
-    print_plateau();
 }
 
 bool isWin(int player, int colonne)
@@ -141,7 +154,7 @@ bool isWin(int player, int colonne)
         else
             break;
     }
-    if (gauche >= 4 || dhGauche >= 4 || droite >= 4 || dhDroite >= 4 || bas >= 4 || dbGauche >= 4 || dbDroite >= 4)
+    if (gauche + droite - 1 >= 4 || dhGauche + dbDroite - 1 >= 4 || dhDroite + dbGauche - 1 >= 4 || bas >= 4)
     {
         return true;
     }
@@ -168,12 +181,24 @@ void game()
             }
             else
             {
-
                 colonne -= 1;
-                update_plateau(colonne, player);
-
-                end = isWin(player, colonne);
-                player = !player;
+                int isError = update_plateau(colonne, player);
+                
+                switch (isError)
+                {
+                case 0:
+                    end = isWin(player, colonne);
+                    player = !player;
+                    break;
+                
+                case 1:
+                    printf("Cette colonne est pleine, veuillez en saisir une autre.\n\n");
+                    break;
+                case 2:
+                    printf("Partie terminee, aucun gagnant !");
+                    end = true;
+                    break;
+                }
             }
         }
         else
@@ -187,10 +212,8 @@ void game()
     scanf("%s", &bye);
 }
 
-int main(void)
+void main(void)
 {
     init();
     game();
-
-    return 0;
 }
