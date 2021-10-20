@@ -97,62 +97,36 @@ bool isWin(int player, int colonne)
         {
             gauche += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur la diagonale haut-gauche*/
-        if (plateau[lineChanged - verif][colonne - verif] == pion)
+        /*Verification sur la diagonale haut-gauche*/
+        else if (plateau[lineChanged - verif][colonne - verif] == pion)
         {
             dhGauche += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur la droite*/
-        if (plateau[lineChanged][colonne + verif] == pion)
+        /*Verification sur la droite*/
+        else if (plateau[lineChanged][colonne + verif] == pion)
         {
             droite += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur la diagonale haut-droit*/
-        if (plateau[lineChanged - verif][colonne + verif] == pion)
+        /*Verification sur la diagonale haut-droit*/
+        else if (plateau[lineChanged - verif][colonne + verif] == pion)
         {
             dhDroite += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur le bas*/
-        if (plateau[lineChanged + verif][colonne] == pion)
+        /*Verification sur le bas*/
+        else if (plateau[lineChanged + verif][colonne] == pion)
         {
             bas += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur la diagonale bas-gauche*/
-        if (plateau[lineChanged + verif][colonne - verif] == pion)
+        /*Verification sur la diagonale bas-gauche*/
+        else if (plateau[lineChanged + verif][colonne - verif] == pion)
         {
             dbGauche += 1;
         }
-        else
-            break;
-    }
-    for (int verif = 1; verif <= 4; verif++)
-    { /*Verification sur la diagonale bas-droit*/
-        if (plateau[lineChanged + verif][colonne + verif] == pion)
+        /*Verification sur la diagonale bas-droit*/
+        else if (plateau[lineChanged + verif][colonne + verif] == pion)
         {
             dbDroite += 1;
         }
-        else
-            break;
     }
     if (gauche + droite - 1 >= 4 || dhGauche + dbDroite - 1 >= 4 || dhDroite + dbGauche - 1 >= 4 || bas >= 4)
     {
@@ -164,6 +138,7 @@ bool isWin(int player, int colonne)
 
 void game()
 {
+    init();
     bool end = false;
     int player = 0;
     print_plateau();
@@ -183,14 +158,14 @@ void game()
             {
                 colonne -= 1;
                 int isError = update_plateau(colonne, player);
-                
+
                 switch (isError)
                 {
                 case 0:
                     end = isWin(player, colonne);
                     player = !player;
                     break;
-                
+
                 case 1:
                     printf("Cette colonne est pleine, veuillez en saisir une autre.\n\n");
                     break;
@@ -214,6 +189,5 @@ void game()
 
 void main(void)
 {
-    init();
     game();
 }
