@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define NBL 6
 #define NBC 7
@@ -136,6 +137,39 @@ bool isWin(int player, int colonne)
         return false;
 }
 
+bool playAgain()
+{
+    char play_again;
+    printf("Souhaitez vous rejouer ? [o/n]\n");
+    int tryError = scanf("%c", &play_again);
+
+    /*if (tryError != 0)
+    {
+        printf("Veuillez repondre par O ou N (Oui ou Non)\n\n");
+        playAgain();
+    }
+    else*/
+    {
+        switch (play_again)
+        {
+        case 'o':
+        case 'O':
+            game();
+            break;
+        case 'n':
+        case 'N':
+            printf("Au plaisir de vous revoir !");
+            clock_t currentTime = clock();
+            while (clock < currentTime + 500)
+                ;
+            break;
+        default:
+            playAgain();
+            break;
+        }
+    }
+}
+
 void game()
 {
     init();
@@ -182,9 +216,8 @@ void game()
             fflush(stdin);
         }
     } while (!end);
-    printf("Felicitation joueur %d !\n\nAppuyez sur entree pour quitter.", !player + 1);
-    char bye;
-    scanf("%s", &bye);
+    printf("Felicitation joueur %d !\n\n", !player + 1);
+    playAgain();
 }
 
 void main(void)
