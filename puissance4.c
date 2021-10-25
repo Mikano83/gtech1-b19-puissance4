@@ -137,49 +137,39 @@ bool isWin(int player, int colonne)
         return false;
 }
 
-bool playAgain()
-{
-    char play_again;
-    printf("Souhaitez vous rejouer ? [o/n]\n");
-    int tryError = scanf("%c", &play_again);
+void game(void);
 
-    /*if (tryError != 0)
+bool playAgain(void)
+{
+    bool endIT = false;
+    do
     {
-        printf("Veuillez repondre par O ou N (Oui ou Non)\n\n");
-        playAgain();
-    }
-    else*/
-    {
-        switch (play_again)
-        {
-        case 'o':
-        case 'O':
+        char play_again;
+        printf("Souhaitez vous rejouer ? [o/n]\n");
+        fflush(stdin);
+        scanf("%c", &play_again);
+        if (play_again == 'o' || play_again == 'O')
             game();
-            break;
-        case 'n':
-        case 'N':
-            printf("Au plaisir de vous revoir !");
-            clock_t currentTime = clock();
-            while (clock < currentTime + 500)
-                ;
-            break;
-        default:
-            playAgain();
-            break;
+        else if (play_again == 'n' || play_again == 'N')
+        {
+            endIT = true;
         }
-    }
+        else
+            continue;
+    } while (!endIT);
 }
 
-void game()
+void game(void)
 {
     init();
+    system("cls");
     bool end = false;
     int player = 0;
     print_plateau();
     do
     {
         int colonne;
-        printf("Joueur %d: ", player + 1);
+        printf("[%c] Joueur %d: ", token[player], player + 1);
         int nbEnt = scanf("%d", &colonne);
         if (nbEnt > 0)
         {
