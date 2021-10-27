@@ -3,22 +3,41 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define NBL 6
-#define NBC 7
-char plateau[NBL][NBC];
+int NBL = 6;
+int NBC = 7;
+char **plateau = NULL;
 char joueur[2];
 char token[] = "xo";
 int lineChanged;
 
+// Fonction d'allocation mémoire:
+char **plateau_malloc()
+{
+    // Allocation tableau de "pointeurs sur pointeurs" (1D):
+    char **plateau = (char **)malloc(NBL * sizeof(char *)); // "Les lignes"
+    // Pour chaque pointeur de premier niveau, on alloue un tableau de pointeurs (1D):
+    for (int l = 0; l < NBL; l++)                        // Pour chaque "ligne"
+        plateau[l] = (char *)malloc(NBC * sizeof(char)); // Les colonnes sont "attachées" à =tab[l]=
+    // On retourne le ponteur =tab= pour l'utiliser ailleurs
+    return plateau;
+}
+
 void init()
 {
-    /*for (int L = 0; L < NBL; L++)
+    printf("Combien de lignes souhaitez vous ?\n");
+    scanf("%d", &NBL);
+    printf("Combien de colonnes souhaitez vous ?\n");
+    scanf("%d", &NBC);
+
+    plateau = plateau_malloc();
+
+    for (int L = 0; L < NBL; L++)
     {
         for (int C = 0; C < NBC; C++)
         {
             plateau[L][C] = '.';
         }
-    }*/
+    }
 }
 
 void print_plateau()
@@ -56,7 +75,7 @@ int update_plateau(int colonne, int player)
 {
     int checkFullPlateau = 0;
 
-    for (int l = NBL; l >= 0; l--)
+    for (int l = NBL - 1; l >= 0; l--)
     {
         if (plateau[0][colonne] != '.')
         {
@@ -90,8 +109,13 @@ bool isWin(int player, int colonne, char pion)
     int dbGauche = 1;
     int dbDroite = 1;
 
+    lineChanged++;
+
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la gauche*/
+        if (colonne < 3)
+            break;
+
         if (plateau[lineChanged][colonne - verif] == pion)
         {
             gauche += 1;
@@ -101,6 +125,11 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la diagonale haut-gauche*/
+        if (lineChanged < 3)
+            break;
+        if (colonne < 3)
+            break;
+            
         if (plateau[lineChanged - verif][colonne - verif] == pion)
         {
             dhGauche += 1;
@@ -110,6 +139,9 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la droite*/
+        if (colonne > NBC - 3)
+            break;
+
         if (plateau[lineChanged][colonne + verif] == pion)
         {
             droite += 1;
@@ -119,6 +151,11 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la diagonale haut-droit*/
+        if (lineChanged < 3)
+            break;
+        if (colonne > NBC - 3)
+            break;
+
         if (plateau[lineChanged - verif][colonne + verif] == pion)
         {
             dhDroite += 1;
@@ -128,6 +165,10 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur le bas*/
+        if (lineChanged > NBL - 4)
+            break;
+
+        printf("l: %d\ncolonne: %d\n", lineChanged + verif, colonne);
         if (plateau[lineChanged + verif][colonne] == pion)
         {
             bas += 1;
@@ -137,6 +178,11 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la diagonale bas-gauche*/
+        if (lineChanged > NBL - 3)
+            break;
+        if (colonne < 3)
+            break;
+
         if (plateau[lineChanged + verif][colonne - verif] == pion)
         {
             dbGauche += 1;
@@ -146,6 +192,11 @@ bool isWin(int player, int colonne, char pion)
     }
     for (int verif = 1; verif <= 4; verif++)
     { /*Verification sur la diagonale bas-droit*/
+        if (lineChanged > NBL - 3)
+            break;
+        if (colonne > NBC - 3)
+            break;
+
         if (plateau[lineChanged + verif][colonne + verif] == pion)
         {
             dbDroite += 1;
@@ -219,7 +270,6 @@ void game(void)
                     break;
                 case 2:
                     printf("Partie terminee, aucun gagnant !");
-                    end = true;
                     break;
                 }
             }
